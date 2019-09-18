@@ -1,0 +1,34 @@
+[debug] [2019-08-31T00:00:36.875Z] ----------------------------------------------------------------------
+[debug] [2019-08-31T00:00:36.878Z] Command:       /usr/bin/node /usr/bin/firebase serve
+[debug] [2019-08-31T00:00:36.878Z] CLI Version:   7.3.0
+[debug] [2019-08-31T00:00:36.878Z] Platform:      linux
+[debug] [2019-08-31T00:00:36.878Z] Node Version:  v8.16.1
+[debug] [2019-08-31T00:00:36.878Z] Time:          Fri Aug 30 2019 21:00:36 GMT-0300 (-03)
+[debug] [2019-08-31T00:00:36.878Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-08-31T00:00:36.885Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-08-31T00:00:36.886Z] > authorizing via signed-in user
+[debug] [2019-08-31T00:00:36.886Z] [iam] checking project newagent-48d6b for permissions ["firebase.projects.get"]
+[debug] [2019-08-31T00:00:36.888Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/newagent-48d6b:testIamPermissions  
+
+[debug] [2019-08-31T00:00:38.181Z] <<< HTTP RESPONSE 200
+[debug] [2019-08-31T00:00:38.184Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/newagent-48d6b  
+ 
+[debug] [2019-08-31T00:00:39.528Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/luizc/Área de Trabalho/code_projs/BetaCAPed'...
+[info] 
+[debug] [2019-08-31T00:00:39.538Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/newagent-48d6b/webApps/-/config  
+ 
+[info] ✔  functions: Using node@8 from host.
+[info] ✔  functions: Emulator started at http://localhost:5001
+[debug] [2019-08-31T00:00:40.923Z] <<< HTTP RESPONSE 200
+[info] i  functions: Watching "/home/luizc/Área de Trabalho/code_projs/BetaCAPed/functions" for Cloud Functions...
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+[debug] [2019-08-31T00:00:41.321Z] [runtime-status] Functions runtime initialized. {"cwd":"/home/luizc/Área de Trabalho/code_projs/BetaCAPed/functions","node_version":"8.16.1"}
+[debug] [2019-08-31T00:00:41.321Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-08-31T00:00:41.324Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.4.0","resolution":"/home/luizc/Área de Trabalho/code_projs/BetaCAPed/functions/node_modules/firebase-admin/lib/index.js"}
+[debug] [2019-08-31T00:00:41.344Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"2.2.0","resolution":"/home/luizc/Área de Trabalho/code_projs/BetaCAPed/functions/node_modules/firebase-functions/lib/index.js"}
+[warn] ⚠  The Cloud Functions emulator requires the module "firebase-functions" to be version >3.0.0 so your version is too old. You can probably fix this by running "npm install firebase-functions@latest" in your functions directory.
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above)

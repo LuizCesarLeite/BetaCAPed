@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CAPed - biblioteca de textos</title>
+
+    <!-- chama as fontes -->
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- estilo -->
+    <link rel="stylesheet" href="css/style.css">
+
+        
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-functions.js"></script>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyB9yjV5RzcCX4xC7bCVEs5gp1kNoj_IJp0",
+            authDomain: "newagent-48d6b.firebaseapp.com",
+            databaseURL: "https://newagent-48d6b.firebaseio.com",
+            projectId: "newagent-48d6b",
+            storageBucket: "newagent-48d6b.appspot.com",
+            messagingSenderId: "104559969736"
+        };
+        firebase.initializeApp(config);    
+    </script>
+
+</head>
+
+
+<body>
+
+    <div class="main">
+
+        <!-- Sing in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    
+                    <div class="signin-image">
+                        <figure><img src="images/signin-image.jpg" alt="sing up image"></figure>
+                        <!-- <a href="#" class="signup-image-link">Create an account</a> -->
+                    </div>
+
+                    <div class="signin-form" id="info_user">
+                        <h2 class="form-title">Complete seu perfil</h2>
+
+                        <div class="form-group form-button">
+                            <h3 id="userHail">&nbsp;</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nomeUser"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                            <input type="text" name="nomeUser" id="nomeUser" required placeholder="Seu nome" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sobrenomeUser"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                            <input type="text" name="sobrenomeUser" id="sobrenomeUser" required placeholder="Seu sobrenome" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="celUser"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                            <input type="text" name="celUser" id="celUser" required placeholder="Seu celular (com DDD, sem hifen)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="emailUser"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                            <input type="text" name="emailUser" id="emailUser" required placeholder="Confirme seu email" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="redelUser"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                            <input type="text" name="redeUser" id="redeUser" required placeholder="Perfil de rede social" />
+                        </div>
+
+                        <div class="form-group form-button">
+                            <a href="javascript: submitform()" class="botao-link">Finalizar</a>
+                        </div>
+                       
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- Modal -->
+            <div id="minhaModal" class="modal">
+
+                <!-- conteudo Modal  -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2 id="user">&nbsp;</h2>
+                    <p>Agora pode você já pode aproveitar a sua textoteca :-)</p>
+                    <a href="consultar.html" class="botao-link">Bora lá</a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- JS -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        function submitform() {
+
+            var db = firebase.firestore();
+
+            var docRef = db.collection("leitores").doc();
+
+            var _nomeUser = document.getElementById("nomeUser").value;
+            var _sobrenomeUser = document.getElementById("sobrenomeUser").value;
+            var _emailUser = document.getElementById("emailUser").value;
+            var _celUser = document.getElementById("celUser").value;
+            var _redeUser = document.getElementById("redeUser").value;
+
+            var data = docRef.set({
+                nomeUser: _nomeUser,
+                sobrenomeUser: _sobrenomeUser,
+                emailUser: _emailUser,
+                celUser: _celUser,
+                redeUser: _redeUser,
+                // dataCadastro: moment().utcOffset('+0900').format('DD/MM/YYYY, hh:mm:ss')
+                dataCadastro: Date.now()
+            }).then(function () {
+                console.log("Funcionou!");
+
+                // https://www.w3schools.com/howto/howto_css_modals.asp
+                // https://www.w3schools.com/howto/howto_js_autocomplete.asp
+
+                var modal = document.getElementById('minhaModal');
+                modal.style.display = "block";
+
+                document.getElementById("user").innerHTML = _nomeUser;
+
+                var span = document.getElementsByClassName("close")[0];
+
+                span.onclick = function() {
+                modal.style.display = "none";
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+                //
+            })
+            .catch(function(err) {
+                console.log(err)
+                alert("Não funfou porra!");;     
+            });
+        }
+
+    </script>
+
+</body>
+</html>

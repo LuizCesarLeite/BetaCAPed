@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CAPed - biblioteca de textos</title>
+
+    <!-- chama as fontes -->
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- estilo -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-functions.js"></script>
+
+    <script>
+    var config = {
+        apiKey: "AIzaSyB9yjV5RzcCX4xC7bCVEs5gp1kNoj_IJp0",
+        authDomain: "newagent-48d6b.firebaseapp.com",
+        databaseURL: "https://newagent-48d6b.firebaseio.com",
+        projectId: "newagent-48d6b",
+        storageBucket: "newagent-48d6b.appspot.com",
+        messagingSenderId: "104559969736"
+    };
+    firebase.initializeApp(config);
+
+    //firebase.auth().languageCode = 'pt-br'
+    </script>
+
+</head>
+
+
+<body>
+
+    <div class="main">
+
+        <!-- Sing in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    
+                    <div class="signin-image">
+                        <figure><img src="images/signin-image.jpg" alt="sing up image"></figure>
+                        <!-- <a href="#" class="signup-image-link">Create an account</a> -->
+                    </div>
+
+                    <div class="signin-form" id="cadastrar">
+                        <h2 class="form-title">Cadastro via celular</h2>
+                        <form method="POST" class="register-form" id="login-form">
+
+                            <div class="form-group">
+                                <label for="celularCadastro"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                                <input type="text" name="celularCadastro" id="celularCadastro" required placeholder="Coloque +55 e o DDD do numero, sem espaços" />
+                            </div>
+
+                            <div class="form-group" id="recaptchaUser"></div>
+
+                            <div class="form-group form-button">
+                                <a href="javascript: submitform()" class="botao-link">Cadastrar</a>
+                            </div>
+
+                        </form>
+                        
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="minhaModal" class="modal">
+
+                <!-- conteudo Modal  -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3 id="user">&nbsp;</h3>
+                    <p>Mandamos um SMS com codigo de verificação para o seu celular: digite-o abaixo:</p>
+                    <br/>
+                    <form method="POST" class="register-form" id="login-form">
+
+                            <div class="form-group">
+                                <label for="celularVerifica"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                                <input type="text" name="celularVerifica" id="celularVerifica" required />
+                            </div>
+
+                            <div class="form-group form-button" id="btt-verifica">
+                                <a href="javascript: submitmodal()" class="botao-link">Verificar!</a>
+                            </div>
+
+                        </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- JS -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script>     
+
+    <script>
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptchaUser", {
+            "size": "normal",
+            "callback": function(response) {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+            // ...
+            },
+            "expired-callback": function() {
+            // Response expired. Ask user to solve reCAPTCHA again.
+            // ...
+            }
+        });
+
+        recaptchaVerifier.render().then(function(widgetId) {
+            window.recaptchaWidgetId = widgetId;
+        });
+
+    </script> 
+
+    <script>
+        function submitform() {
+            // var instaFirebase = !firebase.apps.length ?firebase.initializeApp(config).auth() :firebase.app().auth();
+            var celularUser = document.getElementById("celularCadastro").value;
+
+            var phoneNumber = celularUser;
+            var appVerifier = window.recaptchaVerifier;
+
+            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then(function (confirmationResult) {
+            // SMS sent. Prompt user to type the code from the message, then sign the
+            // user in with confirmationResult.confirm(code).
+                window.confirmationResult = confirmationResult;
+                console.log("funfou");
+                var modal = document.getElementById('minhaModal');
+                modal.style.display = "block";
+
+                document.getElementById("user").innerHTML = phoneNumber;
+
+                var span = document.getElementsByClassName("close")[0];
+
+                span.onclick = function() {
+                modal.style.display = "none";
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+                }).catch(function (error) {
+                    console.log("não rolou");
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode + errorMessage);
+                });
+        }
+
+        function submitmodal() {
+
+            var code = document.getElementById("celularVerifica").value;
+            confirmationResult.confirm(code).then(function (result) {
+            // User signed in successfully.
+                const user = result.user;
+                console.log(user.uid);
+                console.log("funfou: o numero do vivente foi gerado");
+                // location.href="index.html";
+                }).catch(function (error) {
+                console.log("não funfou:" + errorMessage);
+            })            
+            .then(function () {
+                var user = firebase.auth().currentUser;
+                var userUid = user.uid;
+                var db = firebase.firestore();
+                db.collection("leitores").doc(userUid)
+                    .set({
+                    emailUser: "",
+                    celularUser: user.phoneNumber,
+                    nomeUser: "",
+                    sobrenomeUser: "",
+                    redeUser: "",
+                    fotoUser: "",
+                });
+                console.log("funfou de novo");
+            })
+            location.href="index.html";
+            /*.catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode + errorMessage);
+            });
+            */
+        }
+    </script>
+</body>
+</html>

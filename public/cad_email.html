@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CAPed - biblioteca de textos</title>
+
+    <!-- chama as fontes -->
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- estilo -->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+    <div class="main">
+
+        <!-- Sing in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    
+                    <div class="signin-image">
+                        <figure><img src="images/signin-image.jpg" alt="sing up image"></figure>
+                        <!-- <a href="#" class="signup-image-link">Create an account</a> -->
+                    </div>
+
+                    <div class="signin-form" id="cadastrar">
+                        <h2 class="form-title">Cadastro via email</h2>
+                        <form method="POST" class="register-form" id="login-form">
+
+                            <div class="form-group">
+                                <label for="emailCadastro"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                                <input type="text" name="emailCadastro" id="emailCadastro" required placeholder="Seu email para cadastro" />
+                            </div>
+
+                            <div class="form-group form-button">
+                                <a href="javascript: submitform()" class="botao-link">Cadastrar</a>
+                            </div>
+
+                        </form>
+                        
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="minhaModal" class="modal">
+
+                <!-- conteudo Modal  -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3 id="user">&nbsp;</h3>
+                    <p>Mandamos um link de verificação para o email acima: clique para validar! Enquanto isso, preencha seu perfil.</p>
+                    <a href="perfil.html" class="botao-link">Bora lá</a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- JS -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-auth.js"></script>
+
+
+    <script>
+        function submitform() {
+            var config = {
+                apiKey: "AIzaSyB9yjV5RzcCX4xC7bCVEs5gp1kNoj_IJp0",
+                authDomain: "newagent-48d6b.firebaseapp.com",
+                databaseURL: "https://newagent-48d6b.firebaseio.com",
+                projectId: "newagent-48d6b",
+                storageBucket: "newagent-48d6b.appspot.com",
+                messagingSenderId: "104559969736"
+            };
+            firebase.initializeApp(config);
+
+            // var instaFirebase = !firebase.apps.length ?firebase.initializeApp(config).auth() :firebase.app().auth();
+            var emailUser = document.getElementById("emailCadastro").value;
+
+            var actionCodeSettings = {
+                url: 'https://newagent-48d6b.firebaseapp.com/__/?email=' + firebase.auth().emailUser,
+                iOS: {
+                    bundleId: 'com.example.ios'
+                },
+                android: {
+                    packageName: 'com.example.android',
+                    installApp: true,
+                    minimumVersion: '12'
+                },
+
+                handleCodeInApp: true,
+                    // When multiple custom dynamic link domains are defined, specify which
+                    // one to use.
+                dynamicLinkDomain: "caped.mentalmarketing.com.br"
+            };
+
+            firebase.auth().sendSignInLinkToEmail(emailUser, actionCodeSettings)
+            .then(function() {
+                // The link was successfully sent. Inform the user.
+                // Save the email locally so you don't need to ask the user for it again
+                // if they open the link on the same device.
+                window.localStorage.setItem('emailForSignIn', emailUser);
+                console.log("funfou");
+
+                var modal = document.getElementById('minhaModal');
+                modal.style.display = "block";
+
+                document.getElementById("user").innerHTML = emailUser;
+
+                var span = document.getElementsByClassName("close")[0];
+
+                span.onclick = function() {
+                modal.style.display = "none";
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+                
+            })
+            .catch(function(error) {
+                // Some error occurred, you can inspect the code: error.code
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode + errorMessage);
+            });
+        }
+
+    </script>
+</body>
+</html>

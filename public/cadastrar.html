@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CAPed - biblioteca de textos</title>
+
+    <!-- chama as fontes -->
+    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- estilo -->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+    <div class="main">
+
+        <!-- Sing in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+
+                    <div class="signin-image">
+                        <figure><img src="images/signin-image.jpg" alt="sing up image"></figure>
+                        <!-- <a href="#" class="signup-image-link">Create an account</a> -->
+                    </div>
+
+                    <div class="signin-form">
+                        <h2 class="form-title">Cadastrar um texto</h2>
+                        <form method="POST" class="register-form" id="login-form">
+
+                            <div class="form-group">
+                                <label for="nomeAutor"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="nomeAutor" id="nomeAutor" required placeholder="Nome do autor" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sobrenomeAutor"><i
+                                        class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="sobrenomeAutor" id="sobrenomeAutor" required placeholder="Sobrenome do autor" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nomeTexto"><i class="zmdi zmdi-file-text"></i></label>
+                                <input type="text" name="nomeTexto" id="nomeTexto" required placeholder="Nome do texto" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="livroTexto"><i class="zmdi zmdi-file-text"></i></label>
+                                <input type="text" name="livroTexto" id="livroTexto" required placeholder="Livro onde o texto foi publicado" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pagInicio"><i class="zmdi zmdi-long-arrow-right"></i></label>
+                                <input type="text" name="pagInicio" id="pagInicio" required placeholder="Numeração - inicio" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pagFIm"><i class="zmdi zmdi-long-arrow-tab"></i></label>
+                                <input type="text" name="pagFim" id="pagFim" required placeholder="Numeração - fim" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="UC"><i class="zmdi zmdi-accounts"></i></label>
+                                <input type="text" name="UC" id="UC" required placeholder="Unidade Curricular" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="termo"><i class="zmdi zmdi-accounts"></i></label>
+                                <input type="text" name="termo" id="termo" required placeholder="Termo" />
+                            </div>
+                            
+                            <div class="form-group form-button">
+                                    <a href="javascript: submitform()" class="botao-link trigger" id="botao">Cadastrar</a>
+                            </div>
+                            
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="minhaModal" class="modal">
+
+                <!-- conteudo Modal  -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3>IMPORTANTE:</h3>
+                    <div class="modal-content-inner"><p>Antes de entregar seu texto à textoteca, escreva de forma visivel esse código na sua cópia:</p></div>
+                    <h2 id="codID">&nbsp;</h2>
+                    <div><a href="cadastrar.html" class="botao-link">Cadastrar mais um</a>
+                    <a href="consultar.html" class="botao-link">Consultar a base</a></div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JS -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Chama os serviços firebase   <script src="../functions/chaves.js"></script>  -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase-functions.js"></script>
+    
+
+    <script>
+        function submitform() {
+
+        var config = {
+            apiKey: "AIzaSyB9yjV5RzcCX4xC7bCVEs5gp1kNoj_IJp0",
+            authDomain: "newagent-48d6b.firebaseapp.com",
+            databaseURL: "https://newagent-48d6b.firebaseio.com",
+            projectId: "newagent-48d6b",
+            storageBucket: "newagent-48d6b.appspot.com",
+            messagingSenderId: "104559969736"
+        };
+        var db = !firebase.apps.length ?firebase.initializeApp(config).firestore() :firebase.app().firestore();
+        // firebase.initializeApp(config);
+        // var db = firebase.firestore();
+
+        function makeid_num(length) {
+            var text = "";
+            var possible = "123456789";
+
+            for (var i = 0; i < length; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
+        function makeid_let(length) {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNPQRSTUVXWZ";
+
+            for (var i = 0; i < length; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
+        const newId = makeid_num(1) + makeid_let(4);
+
+        var docRef = db.collection("textos").doc(newId);
+
+        var _nomeAutorTexto = document.getElementById("nomeAutor").value;
+        var _sobrenomeAutorTexto = document.getElementById("sobrenomeAutor").value;
+        var _nomeTexto = document.getElementById("nomeTexto").value;
+        var _livroTexto = document.getElementById("livroTexto").value;
+        var _pagIniTexto = document.getElementById("pagInicio").value;
+        var _pagFimTexto = document.getElementById("pagFim").value;
+        var _termo = document.getElementById("termo").value;
+        var _UC = document.getElementById("UC").value;
+    
+        var data = docRef.set({
+            nomeAutorTexto: _nomeAutorTexto,
+            sobrenomeAutorTexto: _sobrenomeAutorTexto,
+            nomeTexto: _nomeTexto,
+            livroTexto: _livroTexto,
+            pagIniTexto: _pagIniTexto,
+            pagFimTexto: _pagFimTexto,
+            termo: _termo,
+            unidadeCurricular: _UC,
+            idCadastrante: "quem cadastrou essa caraia?",
+            dataCadastro: Date.now()
+        })
+        .then(function () {
+            console.log("Funcionou!");
+
+            // https://www.w3schools.com/howto/howto_css_modals.asp
+            // https://www.w3schools.com/howto/howto_js_autocomplete.asp
+
+            var modal = document.getElementById('minhaModal');
+            modal.style.display = "block";
+
+            document.getElementById("codID").innerHTML = newId;
+
+            var span = document.getElementsByClassName("close")[0];
+
+            span.onclick = function() {
+            modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            //
+        })
+        .catch(function(err) {
+            console.log(err)
+            alert("Não funfou porra!");;     
+        });
+    }
+    </script>
+
+</body>
+</html>
+
